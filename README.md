@@ -130,14 +130,6 @@ This project focuses on analyzing eCommerce transactional data using MySQL. The 
 
 
 
-## 📌 Repository Structure
 
-```
-├── dataset/
-│   └── ecommerce_data.csv
-├── queries/
-│   └── sql_analysis.sql
-└── README.md
-```
 
 
