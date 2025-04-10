@@ -1,159 +1,143 @@
-# Task_3_SQL-for-Data-Analysis
-Analyzing data from a database by using SQL Queries
+# 🛒 E-Commerce Data Analysis Using MySQL
 
-# 🛒 E-Commerce SQL Data Analysis
-
-## 📌 Objective
-This project demonstrates how to perform structured SQL queries on an e-commerce dataset to extract insights related to customer behavior, product sales, and overall business performance.
+This project focuses on analyzing eCommerce transactional data using MySQL. The dataset provides rich insights into customer behavior, product performance, and regional sales trends. All analysis is done through structured SQL queries.
 
 ---
 
 ## 📁 Dataset
 
-- **Source**: [Kaggle - E-Commerce Data](https://www.kaggle.com/datasets/carrie1/ecommerce-data)
-- **File Used**: `data.csv`
-- **Description**: The dataset contains transactions from a UK-based online retail store. It includes details such as:
-  - `InvoiceNo`, `StockCode`, `Description`, `Quantity`
-  - `InvoiceDate`, `UnitPrice`, `CustomerID`, `Country`
+**Source**: [Kaggle - E-Commerce Data](https://www.kaggle.com/datasets/carrie1/ecommerce-data)
+
+**Features**:
+- `InvoiceNo`: Invoice number
+- `StockCode`: Product/item code
+- `Description`: Product description
+- `Quantity`: Number of items purchased
+- `InvoiceDate`: Date and time of purchase
+- `UnitPrice`: Price per item
+- `CustomerID`: Customer identification number
+- `Country`: Country of the customer
 
 ---
 
-## 🛠 Tools & Technologies
+## 🔍 SQL Tasks Performed
 
-- **Language**: SQL
-- **Database**: MySQL
-- **Environment**: Jupyter Notebook, MySQL Workbench
-- **Libraries** (for preprocessing): Pandas
-
----
-
-## 📊 Steps Performed
-
-### 1. 🔍 Data Cleaning
-
-- Read the dataset in Jupyter Notebook using:
-  ```python
-  df = pd.read_csv("data.csv", encoding='ISO-8859-1')
+### ✅ Basic Queries
+- **Select all records**
+  ```sql
+  SELECT * FROM data;
   ```
-- Cleaned missing values.
-- Exported clean data to CSV and imported into MySQL database.
+- **Transactions from the United Kingdom**
+  ```sql
+  SELECT * FROM data
+  WHERE Country = 'United Kingdom';
+  ```
+
+### ✅ Aggregation & Grouping
+- **Top 5 most sold products**
+  ```sql
+  SELECT Description, SUM(Quantity) AS TotalSold
+  FROM data
+  GROUP BY Description
+  ORDER BY TotalSold DESC
+  LIMIT 5;
+  ```
+
+- **Average Unit Price**
+  ```sql
+  SELECT AVG(UnitPrice) AS AveragePrice FROM data;
+  ```
+
+- **Total Revenue by Country**
+  ```sql
+  SELECT Country, SUM(Quantity * UnitPrice) AS Revenue
+  FROM data
+  GROUP BY Country
+  ORDER BY Revenue DESC;
+  ```
+
+### ✅ Joins
+- **Create customer table & join**
+  ```sql
+  CREATE TABLE customers (
+      CustomerID VARCHAR(20),
+      CustomerName VARCHAR(100)
+  );
+
+  INSERT INTO customers VALUES ('17850', 'John Doe'), ('13047', 'Jane Smith');
+
+  SELECT e.InvoiceNo, e.Description, c.CustomerName
+  FROM data e
+  INNER JOIN customers c ON e.CustomerID = c.CustomerID;
+  ```
+
+### ✅ Subqueries
+- **Most expensive item**
+  ```sql
+  SELECT * FROM data
+  WHERE UnitPrice = (
+      SELECT MAX(UnitPrice) FROM data
+  );
+  ```
+
+### ✅ Views
+- **Top selling products view**
+  ```sql
+  CREATE VIEW TopSellingProducts AS
+  SELECT Description, SUM(Quantity) AS TotalSold
+  FROM data
+  GROUP BY Description
+  ORDER BY TotalSold DESC;
+  
+  SELECT * FROM TopSellingProducts LIMIT 10;
+  ```
+
+### ✅ Index Optimization
+- **Create indexes for performance**
+  ```sql
+  CREATE INDEX idx_customer ON data(CustomerID);
+  CREATE INDEX idx_invoice_date ON data(InvoiceDate);
+  ```
+
+### ✅ Additional Insights
+- **Top 10 customers by total spending**
+  ```sql
+  SELECT CustomerID, SUM(Quantity * UnitPrice) AS TotalSpent
+  FROM data
+  GROUP BY CustomerID
+  ORDER BY TotalSpent DESC
+  LIMIT 10;
+  ```
+
+- **Number of unique customers per country**
+  ```sql
+  SELECT Country, COUNT(DISTINCT CustomerID) AS UniqueCustomers
+  FROM data
+  GROUP BY Country
+  ORDER BY UniqueCustomers DESC;
+  ```
 
 ---
 
-### 2. 🧱 Database Setup
+## 💡 Learnings
 
-```sql
-CREATE TABLE data (
-    InvoiceNo VARCHAR(20),
-    StockCode VARCHAR(20),
-    Description TEXT,
-    Quantity INT,
-    InvoiceDate DATETIME,
-    UnitPrice DECIMAL(10,2),
-    CustomerID VARCHAR(20),
-    Country VARCHAR(100)
-);
-```
-
----
-
-### 3. 📈 SQL Queries
-
-#### a. Select All Data
-```sql
-SELECT * FROM data;
-```
-
-#### b. Filter by Country
-```sql
-SELECT * FROM data
-WHERE Country = 'United Kingdom';
-```
-
-#### c. Top 5 Most Sold Products
-```sql
-SELECT Description, SUM(Quantity) AS TotalSold
-FROM data
-GROUP BY Description
-ORDER BY TotalSold DESC
-LIMIT 5;
-```
-
-#### d. INNER JOIN with Sample Customers
-```sql
-CREATE TABLE customers (
-    CustomerID VARCHAR(20),
-    CustomerName VARCHAR(100)
-);
-
-INSERT INTO customers VALUES
-('17850', 'John Doe'),
-('13047', 'Jane Smith');
-
-SELECT e.InvoiceNo, e.Description, c.CustomerName
-FROM data e
-INNER JOIN customers c ON e.CustomerID = c.CustomerID;
-```
-
-#### e. Most Expensive Item
-```sql
-SELECT * FROM data
-WHERE UnitPrice = (
-    SELECT MAX(UnitPrice) FROM data
-);
-```
-
-#### f. Average Unit Price
-```sql
-SELECT AVG(UnitPrice) AS AveragePrice FROM data;
-```
-
-#### g. Total Revenue by Country
-```sql
-SELECT Country, SUM(Quantity * UnitPrice) AS Revenue
-FROM data
-GROUP BY Country
-ORDER BY Revenue DESC;
-```
-
-#### h. Views: Top Selling Products
-```sql
-CREATE VIEW TopSellingProducts AS
-SELECT Description, SUM(Quantity) AS TotalSold
-FROM data
-GROUP BY Description
-ORDER BY TotalSold DESC;
-
--- Using the view
-SELECT * FROM TopSellingProducts LIMIT 10;
-```
-
-#### i. Performance Optimization: Indexes
-```sql
-CREATE INDEX idx_customer ON data(CustomerID);
-CREATE INDEX idx_invoice_date ON data(InvoiceDate);
-```
+- Efficient data querying with `GROUP BY`, `ORDER BY`, and subqueries
+- Creating and using `VIEWS` for reusable logic
+- Performance optimization using `INDEXES`
+- Gaining insights into customer segments and product performance
 
 ---
 
 
 
-## 📚 Outcomes
-
-- Identified best-selling products
-- Found top-revenue-generating countries
-- Optimized performance with indexing
-- Practiced data joins and subqueries
-
-
----
-
-## 🗂 Repository Structure
+## 📌 Repository Structure
 
 ```
-📦 ecommerce-sql-analysis
-┣ 📄 data.csv
-┣ 📄 analysis_queries.sql
-┣ 📄 README.md
-┣ 📂 screenshots
+├── dataset/
+│   └── ecommerce_data.csv
+├── queries/
+│   └── sql_analysis.sql
+└── README.md
 ```
+
+
