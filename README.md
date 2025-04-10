@@ -136,13 +136,7 @@ CREATE INDEX idx_invoice_date ON data(InvoiceDate);
 
 ---
 
-## 📸 Screenshots
-Add screenshots of:
-- Jupyter/Workbench environment
-- Query outputs
-- Sample visual analysis (optional)
 
----
 
 ## 📚 Outcomes
 
