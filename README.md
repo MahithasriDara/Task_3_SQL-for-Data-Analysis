@@ -145,13 +145,6 @@ CREATE INDEX idx_invoice_date ON data(InvoiceDate);
 - Optimized performance with indexing
 - Practiced data joins and subqueries
 
----
-
-## 🚀 Future Work
-
-- Integrate data with Tableau/Power BI for visual dashboards
-- Predict top-selling items using ML
-- Segment customers using clustering
 
 ---
 
@@ -162,5 +155,5 @@ CREATE INDEX idx_invoice_date ON data(InvoiceDate);
 ┣ 📄 data.csv
 ┣ 📄 analysis_queries.sql
 ┣ 📄 README.md
-┣ 📂 screenshots/
+┣ 📂 screenshots
 ```
